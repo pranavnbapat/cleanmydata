@@ -1,9 +1,0 @@
-README.md
-setup.py
-cleanmydata/__init__.py
-cleanmydata/functions.py
-cleanmydata.egg-info/PKG-INFO
-cleanmydata.egg-info/SOURCES.txt
-cleanmydata.egg-info/dependency_links.txt
-cleanmydata.egg-info/requires.txt
-cleanmydata.egg-info/top_level.txt

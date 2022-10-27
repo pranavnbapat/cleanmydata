@@ -2,6 +2,9 @@ venv
 lib
 dist
 build
+.idea
+cleanmydata*
 
 .env
 setup.py
+.pypirc
