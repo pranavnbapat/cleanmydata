@@ -1,0 +1,7 @@
+venv
+lib
+dist
+build
+
+.env
+setup.py
