@@ -3,8 +3,10 @@ lib
 dist
 build
 .idea
-cleanmydata*
+data
+cleanmydata.egg-info
 
 .env
 setup.py
 .pypirc
+main.py

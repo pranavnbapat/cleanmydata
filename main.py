@@ -1,11 +1,12 @@
-import pandas as pd
-import re
-from cleanmydata.functions import clean_data
+from cleanmydata.functions import *
 
-mydata = "Here we    go @Pranav #Bapat ...^\n\n This is the"
+df = pd.read_csv('data/training.1600000.processed.noemoticon.csv', encoding='ISO-8859-1', dtype='unicode')
+print(df.head(10))
+df = clean_data(lst=[14, 15], data=df, column='comment', save=False, name='my custome name')
+print(df.head(10))
+print(df.columns)
+print(df.shape)
 
-print(mydata)
-
-mydata = clean_data([4, 6, 10, 1], mydata)
-
-print(mydata)
+# my_data = "Pranav #Bapat pranav.g33k@gmail.com Hello"
+# my_data = clean_data(lst=[2, 4, 9], data=my_data)
+# print(my_data)
