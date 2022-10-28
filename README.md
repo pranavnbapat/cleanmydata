@@ -21,13 +21,6 @@ Functions:
 14) Calculate average word length (only for dataframe; creates a new column; removes NA rows)
 15) Count stopwords (only for dataframe; creates two new columns stowords and stopword_count; ; removes NA rows)
 
-Coming soon...
-<ul>
-   <li>Drop NA values</li>
-   <li>Remove stopwords (creates new columns with stopword count, stopwords, count without stopwords)</li>
-   <li>Calculate average word length (creates a new column)</li>
-</ul>
-
 
 ## How to install?
 <code>pip install cleanmydata</code>
@@ -66,3 +59,6 @@ If using stopwords, make sure you have en_core_web_sm installed. <br>
 <code>
 python -m spacy download en_core_web_sm
 </code>
+
+
+### More options and enhancements coming soon...

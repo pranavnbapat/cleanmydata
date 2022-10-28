@@ -4,7 +4,9 @@ dist
 build
 .idea
 data
-cleanmydata.egg-info
+*.egg-info/
+*.egg
+__pycache__/
 
 .env
 setup.py
