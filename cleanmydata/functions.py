@@ -31,7 +31,6 @@ def remove_emails(data, column=None):
         result = data
         result[column] = result[column].apply(lambda x: re.sub(r"([A-z0-9+._-]+@[A-z0-9+._-]+\.[A-z0-9+_-]+)", "",
                                                                str(x)).strip())
-        print(type(result))
 
     return result
 
@@ -242,6 +241,9 @@ def clean_data(lst, data, column=None, save=False, name=None):
             # Remove all Unnamed columns
             data = data.loc[:, ~data.columns.str.contains('^Unnamed')]
 
+            # Drop NA values
+            data = data.dropna(subset=[column])
+
             # Check for column name
             if column is None:
                 print("Please provide a column name")
@@ -258,7 +260,7 @@ def clean_data(lst, data, column=None, save=False, name=None):
 
         temp_data = data
 
-        lst.sort()
+        # lst.sort()
 
         print("Starting data cleaning...")
         start_time = time.time()
@@ -290,19 +292,18 @@ def clean_data(lst, data, column=None, save=False, name=None):
         if 13 in lst:
             temp_data = word_count(data=temp_data, column=column)
         if 14 in lst:
-            temp_data.dropna(subset=[column], inplace=True)
+            # temp_data.dropna(subset=[column], inplace=True)
             temp_data = avg_word_len(data=temp_data, column=column)
         if 15 in lst:
-            temp_data.dropna(subset=[column], inplace=True)
+            # temp_data.dropna(subset=[column], inplace=True)
             temp_data = remove_stopwords(data=temp_data, column=column)
-
-
-        if 99 in lst:
-            if isinstance(data, pd.DataFrame) or isinstance(data, pd.Series):
-                temp_data.dropna(subset=[column], inplace=True)
 
         print("Data cleaning done.")
         get_exe_time(start_time)
+
+        # Drop NA values
+        if isinstance(data, pd.DataFrame) or isinstance(data, pd.Series):
+            temp_data = temp_data.dropna(subset=[column])
 
         # If save file is True
         if save and (isinstance(data, pd.DataFrame) or isinstance(data, pd.Series)):

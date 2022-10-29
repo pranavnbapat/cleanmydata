@@ -39,26 +39,24 @@ Functions:
 1) Import the library
    <br><code>from cleanmydata.functions import clean_data</code>
 2) Call the method clean_data, and pass the parameters as you wish.
+3) By default, if the dataframe is passed, it drops all NA values (dropna)
 
 ## Examples
 1) To remove emails and hashtags<br>
-   <code>
-   mydata = "Hello folks. abc@example.com #hashtag"
-   <br>mydata = clean_data(lst=[2, 4], data=mydata)
-   <br>print(mydata)
-   </code>
+   <code>mydata = "Hello folks. abc@example.com #hashtag"</code>
+   <br>
+   <code>mydata = clean_data(lst=[2, 4], data=mydata)</code>
+   <br>
+   <code>print(mydata)</code>
 2) To count stopwords, remove mentions, and URLs, and save file from a dataframe<br>
-   <code>
-   df = pd.read_csv('data/my_csv.csv', encoding='ISO-8859-1', dtype='unicode')<br>
-   df = clean_data(lst=[15, 6, 2], data=df, column='comments', save=True, name='my custome file name')
-   </code>
+   <code>df = pd.read_csv('data/my_csv.csv', encoding='ISO-8859-1', dtype='unicode')</code>
+   <br>
+   <code>df = clean_data(lst=[15, 6, 2], data=df, column='comments', save=True, name='my custome file name')</code>
 
 
 ## Other notes
 If using stopwords, make sure you have en_core_web_sm installed. <br>
-<code>
-python -m spacy download en_core_web_sm
-</code>
+<code>python -m spacy download en_core_web_sm</code>
 
 
 ### More options and enhancements coming soon...
