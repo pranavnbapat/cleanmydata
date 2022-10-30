@@ -2,12 +2,16 @@ import re
 import pandas as pd
 from pathlib import Path
 import time
+import sys
 
-# For stowords
+# For stopwords
 import spacy
 stopwords = spacy.load('en_core_web_sm')
 stopwords = stopwords.Defaults.stop_words
 
+from cleanmydata.language_detection import *
+
+# Ignore warnings
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -252,15 +256,14 @@ def clean_data(lst, data, column=None, save=False, name=None):
             if save and name is None:
                 print("Please provide a file name for saving")
                 return False
-        # Check for file name
+        # Check for file name and strip
         elif isinstance(data, str):
+            data = data.strip()
             if save and name is None:
                 print("Please provide a file name for saving")
                 return False
 
         temp_data = data
-
-        # lst.sort()
 
         print("Starting data cleaning...")
         start_time = time.time()
@@ -292,11 +295,16 @@ def clean_data(lst, data, column=None, save=False, name=None):
         if 13 in lst:
             temp_data = word_count(data=temp_data, column=column)
         if 14 in lst:
-            # temp_data.dropna(subset=[column], inplace=True)
             temp_data = avg_word_len(data=temp_data, column=column)
         if 15 in lst:
-            # temp_data.dropna(subset=[column], inplace=True)
             temp_data = remove_stopwords(data=temp_data, column=column)
+        if 16 in lst:
+            print("Detecting language...")
+            temp_data = detect_language(data=temp_data, column=column)
+        if 17 in lst:
+            print("Detecting language...")
+            temp_data = detect_language2(data=temp_data, column=column)
+
 
         print("Data cleaning done.")
         get_exe_time(start_time)
