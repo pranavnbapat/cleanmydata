@@ -18,8 +18,11 @@ Functions:
 11) Remove emojis
 12) Count characters (only for dataframe; creates a new column)
 13) Count words (only for dataframe; creates a new column)
-14) Calculate average word length (only for dataframe; creates a new column; removes NA rows)
-15) Count stopwords (only for dataframe; creates two new columns stowords and stopword_count; ; removes NA rows)
+14) Calculate average word length (only for dataframe; creates a new column)
+15) Count stopwords (only for dataframe; creates two new columns, stowords and stopword_count)
+16) Detect language (uses <a href="https://pypi.org/project/fasttext-langdetect/">fasttext-langdetect</a>) (only for dataframe; creates two new columns, lang and lang_prob)
+17) Detect language (uses <a href="https://pypi.org/project/fasttext-langdetect/">fasttext-langdetect</a>) (only for dataframe; creates just one column with langauge and probability; takes less time)
+18) 
 
 
 ## How to install?

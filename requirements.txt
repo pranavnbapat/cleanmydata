@@ -1,2 +1,5 @@
 pandas
-re
+spacy
+numpy
+contextualSpellCheck
+fasttext-langdetect
