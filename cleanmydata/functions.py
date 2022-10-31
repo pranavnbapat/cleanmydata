@@ -3,6 +3,10 @@ import pandas as pd
 from pathlib import Path
 import time
 import sys
+import urllib.request
+import json
+
+import requests
 from bs4 import BeautifulSoup
 
 # For stopwords
@@ -238,7 +242,14 @@ def remove_html_tags(data, column=None):
     return result
 
 
-def cont_to_exp(data):
+def get_contractions(data):
+    print("Getting contractions...")
+    url ="https://raw.githubusercontent.com/pranavnbapat/cleanmydata/main/cleanmydata/contraction..txt"
+    contractions = urllib.request.urlopen(url).read().decode('utf-8')
+    contractions = json.loads(contractions)
+    contractions = str(contractions)
+    print(contractions)
+    print(type(contractions))
     if type(data) is str:
         for key in contractions:
             value = contractions[key]
@@ -246,6 +257,18 @@ def cont_to_exp(data):
         return data
     else:
         return data
+
+
+def cont_to_exp(data, column=None):
+    result = ''
+    if isinstance(data, str):
+        result = get_contractions(data).strip()
+    elif isinstance(data, pd.DataFrame) or isinstance(data, pd.Series):
+        result = data
+        result[column] = result[column].apply(lambda x: get_contractions(x).strip())
+
+    return result
+
 
 def get_exe_time(start_time):
     end_time = time.time()
@@ -327,6 +350,8 @@ def clean_data(lst, data, column=None, save=False, name=None):
             temp_data = detect_language2(data=temp_data, column=column)
         if 18 in lst:
             temp_data = remove_html_tags(data=temp_data, column=column)
+        if 19 in lst:
+            temp_data = cont_to_exp(data=temp_data, column=column)
 
 
         print("Data cleaning done.")
