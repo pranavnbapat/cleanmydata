@@ -1,3 +1,4 @@
+import ast
 import re
 import pandas as pd
 from pathlib import Path
@@ -246,7 +247,7 @@ def get_contractions(data):
     print("Getting contractions...")
     url ="https://raw.githubusercontent.com/pranavnbapat/cleanmydata/main/cleanmydata/contraction..txt"
     contractions = urllib.request.urlopen(url).read().decode('utf-8')
-    contractions = json.loads(contractions)
+    contractions = eval(contractions)
     contractions = str(contractions)
     print(contractions)
     print(type(contractions))

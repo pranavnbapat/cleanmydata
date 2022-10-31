@@ -1,7 +1,7 @@
 {
-"can't": "cannot",
-"coz": "because",
-"haven't": "have not",
-"bcoz": "because",
-"'cause": "because"
+"can't" : "cannot",
+"coz" : "because",
+"haven't" : "have not",
+"bcoz" : "because",
+"'cause" : "because"
 }
