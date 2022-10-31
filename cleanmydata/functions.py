@@ -3,6 +3,7 @@ import pandas as pd
 from pathlib import Path
 import time
 import sys
+from bs4 import BeautifulSoup
 
 # For stopwords
 import spacy
@@ -226,6 +227,26 @@ def avg_word_len(data, column=None):
     return result
 
 
+def remove_html_tags(data, column=None):
+    result = ''
+    if isinstance(data, str):
+        result = BeautifulSoup(data, 'lxml').get_text().strip()
+    elif isinstance(data, pd.DataFrame) or isinstance(data, pd.Series):
+        result = data
+        result[column] = result[column].apply(lambda x: BeautifulSoup(x, 'lxml').get_text().strip())
+
+    return result
+
+
+def cont_to_exp(data):
+    if type(data) is str:
+        for key in contractions:
+            value = contractions[key]
+            data = data.replace(key, value)
+        return data
+    else:
+        return data
+
 def get_exe_time(start_time):
     end_time = time.time()
     sec = end_time - start_time
@@ -304,6 +325,8 @@ def clean_data(lst, data, column=None, save=False, name=None):
         if 17 in lst:
             print("Detecting language...")
             temp_data = detect_language2(data=temp_data, column=column)
+        if 18 in lst:
+            temp_data = remove_html_tags(data=temp_data, column=column)
 
 
         print("Data cleaning done.")
