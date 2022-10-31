@@ -1,5 +1,6 @@
 pandas
 spacy
 numpy
-contextualSpellCheck
 fasttext-langdetect
+bs4
+lxml

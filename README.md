@@ -22,7 +22,8 @@ Functions:
 15) Count stopwords (only for dataframe; creates two new columns, stowords and stopword_count)
 16) Detect language (uses <a href="https://pypi.org/project/fasttext-langdetect/">fasttext-langdetect</a>) (only for dataframe; creates two new columns, lang and lang_prob)
 17) Detect language (uses <a href="https://pypi.org/project/fasttext-langdetect/">fasttext-langdetect</a>) (only for dataframe; creates just one column with langauge and probability; takes less time)
-18) 
+18) Remove HTML tags
+19) 
 
 
 ## How to install?
@@ -40,7 +41,7 @@ Functions:
 
 ## Usage
 1) Import the library
-   <br><code>from cleanmydata.functions import clean_data</code>
+   <br><code>from cleanmydata.functions import *</code>
 2) Call the method clean_data, and pass the parameters as you wish.
 3) By default, if the dataframe is passed, it drops all NA values (dropna)
 
