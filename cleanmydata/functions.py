@@ -247,10 +247,10 @@ def get_contractions(data):
     print("Getting contractions...")
     url ="https://raw.githubusercontent.com/pranavnbapat/cleanmydata/main/cleanmydata/contraction..txt"
     contractions = urllib.request.urlopen(url).read().decode('utf-8')
+    # print(contractions)
+    # print(type(contractions))
     contractions = eval(contractions)
-    contractions = str(contractions)
-    print(contractions)
-    print(type(contractions))
+    # print(type(contractions))
     if type(data) is str:
         for key in contractions:
             value = contractions[key]
