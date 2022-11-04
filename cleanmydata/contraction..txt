@@ -3,5 +3,9 @@
 "coz" : "because",
 "haven't" : "have not",
 "bcoz" : "because",
-"'cause" : "because"
+"'cause" : "because",
+"gonna" : "going to",
+" n " : " and ",
+" u " : " you ",
+" i " : " I ",
 }
