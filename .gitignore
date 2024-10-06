@@ -6,6 +6,7 @@ data
 __pycache__/
 dist
 build
+.pypirc
 
 .env
 *folder_structure*
