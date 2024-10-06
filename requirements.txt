@@ -1,6 +1,6 @@
-pandas
-spacy
-numpy
-fasttext-langdetect
-bs4
-lxml
+pandas==2.2.3
+spacy==3.8.2
+numpy==2.0.2
+langdetect==1.0.9
+bs4==0.0.2
+lxml==5.3.0

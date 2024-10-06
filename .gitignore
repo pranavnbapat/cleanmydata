@@ -1,14 +1,11 @@
-venv
-lib
-dist
-build
+.venv*
 .idea
 data
 *.egg-info/
 *.egg
 __pycache__/
+dist
+build
 
 .env
-setup.py
-.pypirc
-main.py
+*folder_structure*
