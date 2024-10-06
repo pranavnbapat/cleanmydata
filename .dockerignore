@@ -1,0 +1,18 @@
+# Ignore Python build-related directories and files
+*.egg-info
+*.egg
+build/
+dist/
+.idea/
+.venv*
+
+# Ignore Python packaging files
+setup.py
+
+# Ignore other unnecessary files or directories
+.git
+__pycache__/
+*.pyc
+*.pyo
+.env
+.pypirc

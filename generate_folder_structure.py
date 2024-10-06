@@ -1,7 +1,7 @@
 import os
 
 # Folders to exclude
-exclude_folders = {'.venv', '.git', '.idea', '__pycache__', 'build', 'dist', 'cleanmydata.egg-info'}
+exclude_folders = {'.venv', '.git', '.idea', '__pycache__'}
 exclude_file_pattern = ('_folder_structure.txt')
 
 

@@ -1,11 +1,11 @@
 .venv*
-.idea
-data
+.idea/
+data/
 *.egg-info/
 *.egg
 __pycache__/
-dist
-build
+dist/
+build/
 .pypirc
 
 .env
