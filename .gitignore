@@ -9,4 +9,5 @@ build
 .pypirc
 
 .env
+*.jar
 *folder_structure*
