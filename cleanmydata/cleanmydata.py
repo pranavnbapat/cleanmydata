@@ -1,11 +1,7 @@
 import ast
 import re
-import pandas as pd
 import time
-import sys
 import urllib.request
-import json
-import requests
 import spacy
 from pathlib import Path
 from bs4 import BeautifulSoup
@@ -21,62 +17,55 @@ stopwords = spacy.load('en_core_web_sm')
 stopwords = stopwords.Defaults.stop_words
 
 
+# Utility function to apply regex patterns to a string
 def clean_text(data: str, pattern: str, replace_with: str = " ") -> str:
-    """Utility function to apply regex patterns to a string."""
     return re.sub(pattern, replace_with, data).strip()
 
 
-def apply_column_wise(func, data, column: str):
-    """Utility function to apply functions column-wise."""
-    if isinstance(data, pd.DataFrame):
-        data[column] = data[column].apply(func)
-    elif isinstance(data, pd.Series):
-        data = data.apply(func)
-    return data
+# Text cleaning functions for single strings
+def remove_newlines(data: str) -> str:
+    return clean_text(data, r"\n", " ")
 
 
-def remove_newlines(data, column=None):
-    return apply_column_wise(lambda x: clean_text(x, r"\n", " "), data, column)
+def remove_emails(data: str) -> str:
+    return clean_text(data, r"([A-z0-9+._-]+@[A-z0-9+._-]+\.[A-z0-9+_-]+)", "")
 
 
-def remove_emails(data, column=None):
-    return apply_column_wise(lambda x: clean_text(x, r"([A-z0-9+._-]+@[A-z0-9+._-]+\.[A-z0-9+_-]+)", ""), data, column)
-
-
-def remove_urls(data, column=None):
+def remove_urls(data: str) -> str:
     pattern = r'(http|https|ftp|ssh)://([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w.,@?^=%&:/~+#-])?'
-    return apply_column_wise(lambda x: clean_text(x, pattern, ""), data, column)
+    return clean_text(data, pattern, "")
 
 
-def remove_hashtags(data, column=None):
-    return apply_column_wise(lambda x: clean_text(x, r"#[A-Za-z0-9_]+", ""), data, column)
+def remove_hashtags(data: str) -> str:
+    return clean_text(data, r"#[A-Za-z0-9_]+", "")
 
 
-def remove_if_only_number(data, column=None):
-    return apply_column_wise(lambda x: clean_text(x, r"^[0-9]+$", ""), data, column)
+def remove_if_only_number(data: str) -> str:
+    return clean_text(data, r"^[0-9]+$", "")
 
 
-def remove_mentions(data, column=None):
-    return apply_column_wise(lambda x: clean_text(x, r"@[A-Za-z0-9_]+", " "), data, column)
+def remove_mentions(data: str) -> str:
+    return clean_text(data, r"@[A-Za-z0-9_]+", " ")
 
 
-def remove_retweets(data, column=None):
-    return apply_column_wise(lambda x: clean_text(x, r"\bRT\b", " "), data, column)
+def remove_retweets(data: str) -> str:
+    return clean_text(data, r"\bRT\b", " ")
 
 
-def remove_text_between_square_brackets(data, column=None):
-    return apply_column_wise(lambda x: clean_text(x, r"[\(\[].*?[\)\]]", " "), data, column)
+def remove_text_between_square_brackets(data: str) -> str:
+    return clean_text(data, r"[\(\[].*?[\)\]]", " ")
 
 
-def remove_multiple_whitespaces(data, column=None):
-    return apply_column_wise(lambda x: clean_text(x, r" +", " "), data, column)
+def remove_multiple_whitespaces(data: str) -> str:
+    return clean_text(data, r" +", " ")
 
 
-def remove_multiple_occurrences(data, column=None):
-    return apply_column_wise(lambda x: clean_text(x, r"(.)\1{2,}", r"\1"), data, column)
+def remove_multiple_occurrences(data: str) -> str:
+    return clean_text(data, r"(.)\1{2,}", r"\1")
 
 
-def remove_emojis_base(emoji_data: str) -> str:
+# Function to remove emojis
+def remove_emojis(emoji_data: str) -> str:
     emoji_pattern = re.compile("["  
                                u"\U0001F600-\U0001F64F"  # emoticons
                                u"\U0001F300-\U0001F5FF"  # symbols & pictographs
@@ -99,53 +88,48 @@ def remove_emojis_base(emoji_data: str) -> str:
     return emoji_pattern.sub('', emoji_data)
 
 
-def remove_emojis(data, column=None):
-    return apply_column_wise(remove_emojis_base, data, column)
+# Function to remove HTML tags
+def remove_html_tags(data: str) -> str:
+    return BeautifulSoup(data, 'lxml').get_text().strip()
 
 
-def remove_stopwords(data, column: str):
-    """Removes stopwords from the specified column."""
-    data['stopwords_removed'] = data[column].apply(lambda x: ' '.join(
-        [word for word in x.split() if word.lower() not in stopwords]))
-    return data
+# Function to remove stopwords
+def remove_stopwords(data: str) -> str:
+    return ' '.join([word for word in data.split() if word.lower() not in stopwords])
 
 
-def char_count(data, column=None):
-    return apply_column_wise(lambda x: len(x), data, column)
-
-
-def word_count(data, column=None):
-    return apply_column_wise(lambda x: len(str(x).split()), data, column)
-
-
-def avg_word_len(data, column=None):
-    return apply_column_wise(lambda x: sum(len(word) for word in str(x).split()) / (len(str(x).split()) or 1), data, column)
-
-
-def remove_html_tags(data, column=None):
-    return apply_column_wise(lambda x: BeautifulSoup(x, 'lxml').get_text().strip(), data, column)
-
-
+# Function to get contraction list and expand contractions
 def get_contractions():
-    """Fetches and returns contractions dictionary."""
-    url = "https://raw.githubusercontent.com/pranavnbapat/cleanmydata/main/cleanmydata/contraction..txt"
+    url = "https://raw.githubusercontent.com/pranavnbapat/cleanmydata/main/cleanmydata/contraction.txt"
     contractions = urllib.request.urlopen(url).read().decode('utf-8')
     return ast.literal_eval(contractions)
 
 
-def cont_to_exp(data, column=None):
+def cont_to_exp(data: str) -> str:
     contractions = get_contractions()
-    return apply_column_wise(lambda x: ' '.join([contractions.get(word, word) for word in x.split()]), data, column)
+    return ' '.join([contractions.get(word, word) for word in data.split()])
 
 
+# Character and word count functions
+def char_count(data: str) -> int:
+    return len(data)
+
+
+def word_count(data: str) -> int:
+    return len(data.split())
+
+
+def avg_word_len(data: str) -> float:
+    words = data.split()
+    return sum(len(word) for word in words) / len(words) if words else 0
+
+
+# Time tracking function
 def get_exe_time(start_time: float) -> None:
-    """Prints the execution time in a human-readable format."""
     end_time = time.time()
     elapsed_time = end_time - start_time
-
     hours, rem = divmod(elapsed_time, 3600)
     minutes, seconds = divmod(rem, 60)
-
     print(f"Total execution time: {int(hours):02}:{int(minutes):02}:{seconds:.2f}")
 
 
@@ -171,13 +155,13 @@ def clean_data(lst, data, column=None, save=False, name=None):
         1: remove_newlines, 2: remove_emails, 3: remove_urls, 4: remove_hashtags, 5: remove_if_only_number,
         6: remove_mentions, 7: remove_retweets, 8: remove_text_between_square_brackets, 9: remove_multiple_whitespaces,
         10: remove_multiple_occurrences, 11: remove_emojis, 12: char_count, 13: word_count, 14: avg_word_len,
-        15: remove_stopwords, 16: detect_language, 17: detect_language2, 18: remove_html_tags, 19: cont_to_exp
+        15: remove_stopwords, 16: detect_language, 17: remove_html_tags, 18: cont_to_exp
     }
 
     for option in lst:
         if option in func_map:
             print(f"Running step {option}: {func_map[option].__name__}")
-            data = func_map[option](data, column=column)
+            data = func_map[option](data)
 
     print("Data cleaning done.")
     get_exe_time(start_time)

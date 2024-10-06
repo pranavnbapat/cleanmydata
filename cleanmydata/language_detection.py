@@ -1,38 +1,51 @@
 import pandas as pd
-from ftlangdetect import detect
+from langdetect import detect, DetectorFactory
+from langdetect.lang_detect_exception import LangDetectException
+from concurrent.futures import ThreadPoolExecutor
 
-# Ignore warnings
-import warnings
-warnings.filterwarnings("ignore")
+# Set seed for reproducibility
+DetectorFactory.seed = 0
 
 
-def detect_language(data, column=None):
-    result = ''
+def detect_language(text):
     try:
-        if isinstance(data, pd.DataFrame) or isinstance(data, pd.Series):
-            result = data
-            result['language'] = result[column].apply(lambda x: detect(text=x, low_memory=False)['lang'])
-            result['lang_prob'] = result[column].apply(lambda x: detect(text=x, low_memory=False)['score'])
-    except Exception as e:
-        print("Oops!", e.__class__, "occurred.")
-
-    return result
+        return detect(text)
+    except LangDetectException:
+        return 'unknown'
 
 
-def map_detect_language(data):
-    return detect(text=data, low_memory=False)
+def detect_language_dataframe(data, column=None, num_workers=4):
+    if column is None or column not in data.columns:
+        raise ValueError("A valid column name must be provided.")
+
+    # Drop rows where the column is NaN or empty
+    data = data.dropna(subset=[column])
+
+    # Use ThreadPoolExecutor for parallel processing
+    with ThreadPoolExecutor(max_workers=num_workers) as executor:
+        languages = list(executor.map(detect_language, data[column].tolist()))
+
+    # Add the detected languages to a new column
+    data['language'] = languages
+
+    return data
 
 
-def detect_language2(data, column=None):
-    result = ''
-    try:
-        if isinstance(data, pd.DataFrame) or isinstance(data, pd.Series):
-            result = data
-            temp_list = result[column].to_list()
-            # Detects the language using map function and converts it to the list
-            lang_res = list(map(map_detect_language, temp_list))
-            result['language'] = lang_res
-    except Exception as e:
-        print("Oops!", e.__class__, "occurred.")
+# Example usage:
+if __name__ == "__main__":
+    # Sample DataFrame
+    df = pd.DataFrame({
+        'text': [
+            'Hello world!',
+            'Bonjour tout le monde!',
+            'Hola mundo!',
+            None,  # This will be handled gracefully
+            'Hallo Welt!',
+            'Ciao mondo!',
+            ''  # Empty string will return 'unknown'
+        ]
+    })
 
-    return result
+    # Detect language in the 'text' column and print the result
+    df_with_languages = detect_language_in_dataframe(df, column='text', num_workers=4)
+    print(df_with_languages)
