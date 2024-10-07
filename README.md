@@ -1,8 +1,6 @@
 ## cleanmydata
 
-This library contains all the essential functions for data cleaning.
-
-It takes a list of data cleaning parameters and either a string or pandas dataframe as input
+cleanmydata is a Python library designed for efficient text data cleaning. It provides essential functions for cleaning text strings, with a focus on common preprocessing tasks like removing emails, URLs, stopwords, and more.
 
 Functions:
 1) Remove new lines
@@ -23,7 +21,6 @@ Functions:
 16) Detect language (uses <a href="https://pypi.org/project/fasttext-langdetect/">fasttext-langdetect</a>) (only for dataframe; creates two new columns, lang and lang_prob)
 17) Detect language (uses <a href="https://pypi.org/project/fasttext-langdetect/">fasttext-langdetect</a>) (only for dataframe; creates just one column with langauge and probability; takes less time)
 18) Remove HTML tags
-19) 
 
 
 ## How to install?

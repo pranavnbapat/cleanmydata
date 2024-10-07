@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="cleanmydata",  # Name of the package
-    version="0.1.2",     # Initial version
+    version="0.1.1",
     description="A data cleaning library for text processing",
     long_description=open('README.md').read(),  # Readme file
     long_description_content_type="text/markdown",
