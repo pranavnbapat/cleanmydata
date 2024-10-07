@@ -27,4 +27,4 @@ EXPOSE 9000
 #CMD ["uvicorn", "cleanmydata.app:app", "--host", "0.0.0.0", "--port", "9000"]
 
 # Using CMD to use the environment variable PORT provided by railway.app
-CMD ["uvicorn", "cleanmydata.app:app", "--host", "0.0.0.0", "--port", "${PORT:-9000}"]
+CMD ["sh", "-c", "uvicorn cleanmydata.app:app --host 0.0.0.0 --port ${PORT:-9000}"]

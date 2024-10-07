@@ -6,7 +6,8 @@ services:
       context: .
     container_name: cleanmydata_service
     ports:
-      - "9000:9000"  # For FastAPI service
+      - "9000:9000"  # Mapping container's internal port 9000 to host port 9000
     environment:
       - APP_ENV=production
+      - PORT=9000  # Ensure that the environment variable PORT is set in docker-compose
     restart: always
