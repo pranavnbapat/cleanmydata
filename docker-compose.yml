@@ -10,4 +10,4 @@ services:
     environment:
       - APP_ENV=production
       - PORT=9000  # Ensure that the environment variable PORT is set in docker-compose
-    restart: always
+    restart: no
